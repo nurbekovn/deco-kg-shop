@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deco_kg — инструмент, оборудование и генераторы в Бишкеке</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="topbar">
+    <div class="container">
+      <span>📍 г. Бишкек, ул. Примерная 16/5</span>
+      <span>☎ +996 705 23-04-01 · Ежедневно 08:00–19:00</span>
+    </div>
+  </div>
+  <div class="header-main container">
+    <button class="burger" aria-label="Открыть меню категорий"><span></span><span></span><span></span></button>
+    <a href="index.html" class="logo">Deco<span class="accent">_kg</span></a>
+    <form class="search-form" action="catalog.html" method="get">
+      <input type="text" name="q" placeholder="Искать товар...">
+      <button type="submit">🔍</button>
+    </form>
+    <a href="cart.html" class="cart-link">🛒 Корзина <span class="cart-badge">0</span></a>
+  </div>
+  <nav class="category-nav">
+    <ul id="category-nav-list"></ul>
+  </nav>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-carousel" id="hero-carousel">
+      <div class="hero-slide hero-slide-1 is-active">
+        <div>
+          <h2>Инструмент и оборудование для стройки</h2>
+          <p>COROLLA, OSKAR, WORCRAFT, DECO и TEH — в одном каталоге</p>
+          <a href="catalog.html" class="btn btn-primary">Перейти в каталог</a>
+        </div>
+      </div>
+      <div class="hero-slide hero-slide-2">
+        <div>
+          <h2>Электроинструмент COROLLA и WORCRAFT</h2>
+          <p>Буры, насадки, оснастка и ручной инструмент в наличии</p>
+          <a href="catalog.html?category=COROLLA" class="btn btn-primary">Смотреть инструменты</a>
+        </div>
+      </div>
+      <div class="hero-slide hero-slide-3">
+        <div>
+          <h2>Генераторы и оборудование DECO</h2>
+          <p>Дизельные генераторы и техника TEH — выгодные цены</p>
+          <a href="catalog.html?category=INTOP%2BDECO" class="btn btn-primary">Перейти к генераторам</a>
+        </div>
+      </div>
+      <button class="hero-prev">‹</button>
+      <button class="hero-next">›</button>
+      <div class="hero-dots"></div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>Категории товаров</h2>
+    <div class="category-grid" id="category-grid"></div>
+  </section>
+
+  <section class="section">
+    <h2>Хиты продаж</h2>
+    <div class="product-grid" id="bestsellers-grid"></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid container">
+    <div>
+      <h4>Deco_kg</h4>
+      <p>Инструмент, оборудование и генераторы в Бишкеке. COROLLA, OSKAR, WORCRAFT, DECO, TEH — в одном месте.</p>
+    </div>
+    <div>
+      <h4>Контакты</h4>
+      <p>☎ +996 705 23-04-01</p>
+      <p>✉ shop@deco.kg</p>
+      <p>📍 ул. Примерная 16/5, Бишкек</p>
+    </div>
+    <div>
+      <h4>Режим работы</h4>
+      <p>Ежедневно: 08:00–19:00</p>
+      <p>Без выходных</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Deco_kg — демо-сайт, создан как учебный проект.</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
