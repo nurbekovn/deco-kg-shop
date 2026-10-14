@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Товары Deco_kg — инструмент, оборудование и генераторы в Бишкеке.">
+<meta name="theme-color" content="#ff6b00">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+<script>(function(){try{if(localStorage.getItem("deco_kg_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <title>Товар — Deco_kg</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -22,7 +26,9 @@
       <input type="text" name="q" placeholder="Искать товар...">
       <button type="submit">🔍</button>
     </form>
+    <a href="favorites.html" class="wishlist-link">♡ Избранное <span class="wishlist-badge">0</span></a>
     <a href="cart.html" class="cart-link">🛒 Корзина <span class="cart-badge">0</span></a>
+    <button class="theme-toggle" aria-label="Переключить тему">🌙</button>
   </div>
   <nav class="category-nav">
     <ul id="category-nav-list"></ul>
@@ -54,6 +60,8 @@
 
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/toast.js"></script>
 <script src="js/main.js"></script>
 <script src="js/product.js"></script>
 </body>

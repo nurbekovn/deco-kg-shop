@@ -1078,13 +1078,13 @@ const PRODUCTS = [
   { id: 1067, categoryId: "TEH", name: "трамбовка", price: 37950, currency: "KGS", oldPrice: null, unit: "шт.", image: null, bestseller: false },
   { id: 1068, categoryId: "TEH", name: "трамбовка", price: 47725, currency: "KGS", oldPrice: null, unit: "шт.", image: null, bestseller: false },
   { id: 1069, categoryId: "TEH", name: "трамбовка", price: 43125, currency: "KGS", oldPrice: null, unit: "шт.", image: null, bestseller: false },
-  { id: 1070, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 12 КВТ (DGR-15)", price: 5175.00, currency: "USD", oldPrice: null, unit: "шт.", image: null, bestseller: false },
+  { id: 1070, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 12 КВТ (DGR-15)", price: 5175.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1070.jpg", bestseller: false },
   { id: 1071, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 24 КВТ (DGR-30)", price: 5520.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1071.jpg", bestseller: false },
   { id: 1072, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 40 КВТ (DGR-50)", price: 6440.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1072.jpg", bestseller: false },
   { id: 1073, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 52 КВТ (DGR-65)", price: 7015.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1073.jpg", bestseller: false },
   { id: 1074, categoryId: "INTOP+DECO", name: "DECO ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 64 КВТ (DGR-80)", price: 8510.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1074.jpg", bestseller: false },
   { id: 1075, categoryId: "INTOP+DECO", name: "ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 100 КВТ1 (DGR-125DECO)", price: 10350.00, currency: "USD", oldPrice: null, unit: "шт.", image: null, bestseller: false },
-  { id: 1076, categoryId: "INTOP+DECO", name: "ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 160 КВТ1 (DGR-200DECO)", price: 13225.00, currency: "USD", oldPrice: null, unit: "шт.", image: null, bestseller: false },
+  { id: 1076, categoryId: "INTOP+DECO", name: "ДИЗЕЛЬНЫЙ БЕСШУМНЫЙ ГЕНЕРАТОР 160 КВТ1 (DGR-200DECO)", price: 13225.00, currency: "USD", oldPrice: null, unit: "шт.", image: "images/products/1076.jpg", bestseller: false },
 ];
 function getCategoryById(id) {
   return CATEGORIES.find((c) => c.id === id);
@@ -1113,6 +1113,29 @@ function formatPrice(value, currency) {
   return currency === "USD" ? `$${formatted}` : `${formatted} сом`;
 }
 
+function getYouTubeEmbedUrl(url) {
+  if (!url || typeof url !== "string") return null;
+  url = url.trim();
+  if (!url) return null;
+  let id = null;
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\.|^m\./, "");
+    if (host === "youtu.be") {
+      id = u.pathname.split("/").filter(Boolean)[0];
+    } else if (host === "youtube.com") {
+      if (u.pathname === "/watch") id = u.searchParams.get("v");
+      else if (u.pathname.startsWith("/embed/")) id = u.pathname.split("/")[2];
+      else if (u.pathname.startsWith("/shorts/")) id = u.pathname.split("/")[2];
+    }
+  } catch (e) {
+    return null;
+  }
+  if (!id) return null;
+  id = id.split(/[?&#]/)[0];
+  return id ? `https://www.youtube.com/embed/${id}` : null;
+}
+
 function productThumbHTML(product) {
   const cat = getCategoryById(product.categoryId);
   const colors = categoryColors(product.categoryId);
@@ -1131,12 +1154,14 @@ function renderProductCard(product) {
   const priceHTML = product.oldPrice
     ? `<span class="price-old">${formatPrice(product.oldPrice, product.currency)}</span> <span class="price">${formatPrice(product.price, product.currency)}</span>`
     : `<span class="price">${formatPrice(product.price, product.currency)}</span>`;
+  const isWishlisted = typeof Wishlist !== "undefined" && Wishlist.has(product.id);
 
   return `
   <article class="product-card" data-id="${product.id}">
     <a class="product-thumb-link" href="product.html?id=${product.id}">
       ${productThumbHTML(product)}
     </a>
+    <button class="btn-wishlist${isWishlisted ? " is-active" : ""}" data-id="${product.id}" aria-label="В избранное" title="В избранное">${isWishlisted ? "♥" : "♡"}</button>
     <div class="product-body">
       <a class="product-title" href="product.html?id=${product.id}">${product.name}</a>
       <div class="product-price">${priceHTML}<span class="unit">/ ${product.unit}</span></div>

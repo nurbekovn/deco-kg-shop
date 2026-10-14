@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Избранные товары Deco_kg — инструмент, оборудование и генераторы в Бишкеке.">
+<meta name="theme-color" content="#ff6b00">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+<script>(function(){try{if(localStorage.getItem("deco_kg_theme")==="dark")document.documentElement.setAttribute("data-theme","dark");}catch(e){}})();</script>
+<title>Избранное — Deco_kg</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="topbar">
+    <div class="container">
+      <span>📍 г. Бишкек, ул. Примерная 16/5</span>
+      <span>☎ +996 705 23-04-01 · Ежедневно 08:00–19:00</span>
+    </div>
+  </div>
+  <div class="header-main container">
+    <button class="burger" aria-label="Открыть меню категорий"><span></span><span></span><span></span></button>
+    <a href="index.html" class="logo">Deco<span class="accent">_kg</span></a>
+    <form class="search-form" action="catalog.html" method="get">
+      <input type="text" name="q" placeholder="Искать товар...">
+      <button type="submit">🔍</button>
+    </form>
+    <a href="favorites.html" class="wishlist-link">♡ Избранное <span class="wishlist-badge">0</span></a>
+    <a href="cart.html" class="cart-link">🛒 Корзина <span class="cart-badge">0</span></a>
+    <button class="theme-toggle" aria-label="Переключить тему">🌙</button>
+  </div>
+  <nav class="category-nav">
+    <ul id="category-nav-list"></ul>
+  </nav>
+</header>
+
+<main class="section">
+  <h1>Избранное</h1>
+  <div class="product-grid" id="favorites-grid"></div>
+  <div class="catalog-empty" id="favorites-empty" style="display:none;">
+    <p>В избранном пока пусто.</p>
+    <a class="btn btn-primary" href="catalog.html">Перейти в каталог</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-grid container">
+    <div>
+      <h4>Deco_kg</h4>
+      <p>Инструмент, оборудование и генераторы в Бишкеке. COROLLA, OSKAR, WORCRAFT, DECO, TEH — в одном месте.</p>
+    </div>
+    <div>
+      <h4>Контакты</h4>
+      <p>☎ +996 705 23-04-01</p>
+      <p>✉ shop@deco.kg</p>
+      <p>📍 ул. Примерная 16/5, Бишкек</p>
+    </div>
+    <div>
+      <h4>Режим работы</h4>
+      <p>Ежедневно: 08:00–19:00</p>
+      <p>Без выходных</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Deco_kg — демо-сайт, создан как учебный проект.</div>
+</footer>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/main.js"></script>
+<script src="js/favorites.js"></script>
+</body>
+</html>

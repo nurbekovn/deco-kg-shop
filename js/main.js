@@ -40,7 +40,63 @@ function initAddToCartDelegation() {
       btn.textContent = originalText;
       btn.classList.remove("btn-added");
     }, 1200);
+    const product = typeof getProductById === "function" ? getProductById(id) : null;
+    if (typeof Toast !== "undefined") {
+      Toast.show(product ? `«${product.name}» добавлен в корзину` : "Товар добавлен в корзину", "success");
+    }
   });
+}
+
+/* Делегирование клика по кнопкам "В избранное" на любой странице */
+function initWishlistDelegation() {
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn-wishlist");
+    if (!btn) return;
+    e.preventDefault();
+    const id = btn.dataset.id;
+    const added = Wishlist.toggle(id);
+    document.querySelectorAll(`.btn-wishlist[data-id="${id}"]`).forEach((el) => {
+      el.classList.toggle("is-active", added);
+      el.textContent = added ? "♥" : "♡";
+    });
+    if (typeof Toast !== "undefined") {
+      Toast.show(added ? "Добавлено в избранное" : "Удалено из избранного", "info");
+    }
+  });
+}
+
+/* Переключатель тёмной темы */
+const THEME_STORAGE_KEY = "deco_kg_theme";
+
+function initThemeToggle() {
+  const toggle = document.querySelector(".theme-toggle");
+  const apply = (theme) => {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (toggle) toggle.textContent = theme === "dark" ? "☀️" : "🌙";
+  };
+  apply(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light");
+  if (!toggle) return;
+  toggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    const next = current === "dark" ? "light" : "dark";
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+    } catch (e) {}
+    apply(next);
+  });
+}
+
+/* Кнопка "наверх", появляется после прокрутки */
+function initBackToTop() {
+  const btn = document.createElement("button");
+  btn.className = "back-to-top";
+  btn.setAttribute("aria-label", "Наверх страницы");
+  btn.textContent = "↑";
+  document.body.appendChild(btn);
+  window.addEventListener("scroll", () => {
+    btn.classList.toggle("is-visible", window.scrollY > 500);
+  });
+  btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 }
 
 /* ---- Главная страница ---- */
@@ -105,6 +161,9 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCategoryNav();
   initBurgerMenu();
   initAddToCartDelegation();
+  initWishlistDelegation();
+  initThemeToggle();
+  initBackToTop();
   renderCategoryGrid();
   renderBestsellers();
   initHeroCarousel();
