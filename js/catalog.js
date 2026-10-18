@@ -24,9 +24,12 @@ function renderSidebar(state) {
   const allCount = PRODUCTS.length;
   const items = CATEGORIES.map((c) => {
     const count = PRODUCTS.filter((p) => p.categoryId === c.id).length;
+    const colors = categoryColors(c.id);
     return `<li>
       <a href="#" data-category="${c.id}" class="${state.category === c.id ? "is-active" : ""}">
-        <span class="cat-icon">${c.icon}</span>${c.name} <span class="cat-count">${count}</span>
+        <span class="cat-icon" style="background:${colors.bg};color:${colors.fg}">${c.icon}</span>
+        <span class="cat-name">${c.name} <span class="cat-brand">${String(c.id).split("-")[0]}</span></span>
+        <span class="cat-count">${count}</span>
       </a>
     </li>`;
   }).join("");

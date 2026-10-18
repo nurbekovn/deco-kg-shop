@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Голосовой помощник Deco_kg — спросите голосом цену любого товара из каталога.">
+<meta name="theme-color" content="#1f90bb">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>">
+<title>Голосовой помощник Deco_kg</title>
+<style>
+  :root {
+    --accent: #1f90bb;
+    --bg: #0e1116;
+    --panel: #171c24;
+    --panel-2: #1f2630;
+    --text: #e8ecf1;
+    --muted: #8b95a5;
+    --ok: #35c46b;
+    --warn: #ffb020;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(1200px 600px at 50% -10%, #1d2430 0%, var(--bg) 60%);
+    color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+  a { color: var(--accent); }
+  .wrap { width: 100%; max-width: 680px; }
+  .brand {
+    font-size: 22px; font-weight: 800; letter-spacing: -.02em;
+    text-align: center; margin-bottom: 4px;
+  }
+  .brand span { color: var(--accent); }
+  .sub { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  .orb-zone { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  #orb {
+    width: 148px; height: 148px; border-radius: 50%;
+    border: none; cursor: pointer; position: relative;
+    background: linear-gradient(145deg, #2fa8d6, #16718f);
+    color: #fff; font-size: 17px; font-weight: 700;
+    box-shadow: 0 10px 40px rgba(31,144,187,.45);
+    transition: transform .15s ease, box-shadow .2s ease;
+  }
+  #orb:hover { transform: scale(1.03); }
+  #orb:active { transform: scale(.97); }
+  #orb.listening { background: linear-gradient(145deg, #4cd98a, #19a35a); box-shadow: 0 10px 40px rgba(53,196,107,.35); }
+  #orb.speaking  { background: linear-gradient(145deg, #5aa9ff, #1f6fd0); box-shadow: 0 10px 40px rgba(90,169,255,.35); }
+  #orb.thinking  { background: linear-gradient(145deg, #c58cff, #7a3fd0); box-shadow: 0 10px 40px rgba(197,140,255,.35); }
+  #orb::after {
+    content: ""; position: absolute; inset: -14px; border-radius: 50%;
+    border: 2px solid currentColor; opacity: 0; pointer-events: none;
+  }
+  #orb.listening::after { animation: pulse 1.6s ease-out infinite; }
+  @keyframes pulse {
+    0%   { transform: scale(.92); opacity: .55; }
+    100% { transform: scale(1.18); opacity: 0; }
+  }
+  #level {
+    width: 180px; height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden;
+  }
+  #level i { display: block; height: 100%; width: 0%; background: var(--ok); transition: width .08s linear; }
+  #status { font-size: 14px; color: var(--muted); min-height: 20px; text-align: center; }
+
+  .hint {
+    margin: 26px 0 0; padding: 14px 16px; border-radius: 12px;
+    background: var(--panel); border: 1px solid #242c38; font-size: 14px; color: var(--muted);
+  }
+  .hint b { color: var(--text); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip {
+    background: var(--panel-2); border: 1px solid #2b3442; color: var(--text);
+    padding: 6px 11px; border-radius: 999px; font-size: 13px; cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+  #log { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { padding: 11px 14px; border-radius: 14px; max-width: 86%; white-space: pre-wrap; font-size: 15px; }
+  .msg.me  { align-self: flex-end; background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.bot { align-self: flex-start; background: var(--panel-2); border-bottom-left-radius: 4px; }
+  .msg.sys { align-self: center; background: transparent; color: var(--muted); font-size: 13px; text-align: center; }
+  .msg.me.interim { opacity: .5; }
+
+  .typebar { display: flex; gap: 8px; margin-top: 22px; }
+  .typebar input {
+    flex: 1; padding: 12px 14px; border-radius: 10px; font-size: 15px;
+    background: var(--panel); border: 1px solid #2b3442; color: var(--text);
+  }
+  .typebar input:focus { outline: none; border-color: var(--accent); }
+  .typebar button {
+    padding: 12px 18px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--panel-2); color: var(--text); font-size: 15px; font-weight: 600;
+  }
+  .typebar button:hover { background: #2b3442; }
+  .foot { margin-top: 28px; text-align: center; font-size: 13px; color: var(--muted); }
+  .err { color: var(--warn); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Deco<span>_kg</span> · голосовой помощник</div>
+  <div class="sub">Спросите голосом про любой товар из каталога</div>
+
+  <div class="orb-zone">
+    <button id="orb" aria-live="polite">Начать</button>
+    <div id="level"><i></i></div>
+    <div id="status">Нажмите «Начать» и разрешите доступ к микрофону</div>
+  </div>
+
+  <div class="hint">
+    <b>Можно перебивать.</b> Пока помощник говорит, просто начните говорить — он замолчит и послушает вас.
+    <div class="chips">
+      <span class="chip">Сколько стоит перфоратор</span>
+      <span class="chip">Есть ли генератор</span>
+      <span class="chip">Покажи шуруповёрты</span>
+      <span class="chip">Самая дешёвая болгарка</span>
+      <span class="chip">Что есть из уровней</span>
+    </div>
+  </div>
+
+  <div id="log"></div>
+
+  <div class="typebar">
+    <input id="typein" type="text" placeholder="Или напишите текстом (если микрофона нет)" autocomplete="off">
+    <button id="typesend">→</button>
+  </div>
+
+  <div class="foot">
+    Товаров в каталоге: <b id="pcount">—</b> ·
+    <a href="index.html">вернуться в магазин</a>
+  </div>
+</div>
+
+<script src="js/products.js?v=9"></script>
+<script src="js/voice.js?v=1"></script>
+</body>
+</html>

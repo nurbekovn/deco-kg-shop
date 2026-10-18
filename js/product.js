@@ -29,6 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
     : "";
   const isWishlisted = Wishlist.has(product.id);
 
+  const specs = product.specs || {};
+  const specKeys = Object.keys(specs);
+  const specsHTML = specKeys.length
+    ? `<table class="product-specs">
+        <caption>Характеристики</caption>
+        <tbody>
+          ${specKeys.map((k) => `<tr><th>${k}</th><td>${specs[k]}</td></tr>`).join("")}
+        </tbody>
+      </table>`
+    : "";
+
   container.innerHTML = `
     <nav class="breadcrumbs">
       <a href="index.html">Главная</a> /
@@ -50,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <button class="btn btn-primary btn-add-cart btn-large" data-id="${product.id}" data-use-qty-input="true">В корзину</button>
         <p class="product-description">Качественный товар для строительства и ремонта. Доступен к заказу с доставкой по Бишкеку.</p>
+        ${specsHTML}
       </div>
     </div>
     ${videoHTML}
