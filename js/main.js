@@ -10,7 +10,9 @@ function renderCategoryNav() {
   if (!list) return;
   const params = new URLSearchParams(window.location.search);
   const activeCategory = params.get("category");
-  list.innerHTML = CATEGORIES.map(
+  /* пустые категории не показываем: клик по ним вёл на «товары не найдены» */
+  const shown = CATEGORIES.filter((c) => PRODUCTS.some((p) => p.categoryId === c.id));
+  list.innerHTML = shown.map(
     (c) => `<li>
       <a href="catalog.html?category=${c.id}" class="${c.id === activeCategory ? "is-active" : ""}">
         <span class="cat-icon">${c.icon}</span>${c.name}
@@ -18,6 +20,27 @@ function renderCategoryNav() {
       </a>
     </li>`
   ).join("");
+}
+
+/* После поиска страница перезагружается, и поле в шапке оказывалось пустым —
+   человеку кажется, что запрос стёрся. Возвращаем слово в поле и держим его
+   в одной связке с полем на странице каталога. */
+function initHeaderSearch() {
+  const headerInput = document.querySelector(".search-form input[name='q']");
+  if (!headerInput) return;
+  const q = new URLSearchParams(window.location.search).get("q");
+  if (q) headerInput.value = q;
+
+  const catalogInput = document.getElementById("catalog-search");
+  if (!catalogInput) return;
+  headerInput.addEventListener("input", () => {
+    if (catalogInput.value === headerInput.value) return;
+    catalogInput.value = headerInput.value;
+    catalogInput.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  catalogInput.addEventListener("input", () => {
+    headerInput.value = catalogInput.value;
+  });
 }
 
 function initBurgerMenu() {
@@ -121,18 +144,21 @@ function renderCategoryGrid() {
 
   const cards = top.map((c) => {
     const colors = categoryColors(c.id);
-    const thumb = c.thumb
-      ? `<img src="${c.thumb}" alt="${c.name}" loading="lazy">`
-      : `<span style="color:${colors.fg}">${c.icon}</span>`;
+    /* Готовая плитка-композиция: товары разложены на серой подложке.
+       Если файла нет — откатываемся на фото первого товара категории. */
+    const fallback = c.thumb
+      ? `this.src='${c.thumb}';this.classList.add('tile-img-plain')`
+      : `this.remove()`;
+    const thumb = `<img src="images/categories/${c.id}.jpg" alt="${c.name}" loading="lazy" onerror="${fallback}">`;
     return `<a class="tile" href="catalog.html?category=${c.id}">
+      <span class="tile-name">${c.name}<span class="tile-count">${categoryBrand(c.id)} · ${c.count} товаров</span></span>
       <span class="tile-img" style="background:${colors.bg}">${thumb}</span>
-      <span class="tile-name">${c.name}<br><span class="tile-count">${categoryBrand(c.id)} · ${c.count} товаров</span></span>
     </a>`;
   });
 
   cards.push(`<a class="tile" href="catalog.html">
+    <span class="tile-name">Все категории<span class="tile-count">${CATEGORIES.length} разделов</span></span>
     <span class="tile-img" style="background:var(--bg-alt)"><span>➔</span></span>
-    <span class="tile-name">Все категории</span>
   </a>`);
 
   grid.innerHTML = cards.join("");
@@ -208,6 +234,7 @@ function initHeroCarousel() {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderCategoryNav();
+  initHeaderSearch();
   initBurgerMenu();
   initAddToCartDelegation();
   initWishlistDelegation();

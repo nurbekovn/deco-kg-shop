@@ -4,6 +4,7 @@ function getCatalogState() {
   const params = new URLSearchParams(window.location.search);
   return {
     category: params.get("category") || "",
+    brand: (params.get("brand") || "").trim().toUpperCase(),
     q: (params.get("q") || "").trim().toLowerCase(),
     sort: params.get("sort") || ""
   };
@@ -12,6 +13,7 @@ function getCatalogState() {
 function updateCatalogURL(state) {
   const params = new URLSearchParams();
   if (state.category) params.set("category", state.category);
+  if (state.brand) params.set("brand", state.brand);
   if (state.q) params.set("q", state.q);
   if (state.sort) params.set("sort", state.sort);
   const query = params.toString();
@@ -22,7 +24,7 @@ function renderSidebar(state) {
   const sidebar = document.getElementById("catalog-sidebar");
   if (!sidebar) return;
   const allCount = PRODUCTS.length;
-  const items = CATEGORIES.map((c) => {
+  const items = CATEGORIES.filter((c) => PRODUCTS.some((p) => p.categoryId === c.id)).map((c) => {
     const count = PRODUCTS.filter((p) => p.categoryId === c.id).length;
     const colors = categoryColors(c.id);
     return `<li>
@@ -43,6 +45,10 @@ function filterAndSortProducts(state) {
   let items = PRODUCTS.slice();
   if (state.category) {
     items = items.filter((p) => p.categoryId === state.category);
+  }
+  /* отбор по бренду: id категории начинается с имени бренда */
+  if (state.brand) {
+    items = items.filter((p) => p.categoryId.split("-")[0] === state.brand);
   }
   if (state.q) {
     items = items.filter((p) => p.name.toLowerCase().includes(state.q));
@@ -69,6 +75,8 @@ function renderCatalogGrid(state) {
       ? `Результаты поиска: «${state.q}»`
       : cat
       ? cat.name
+      : state.brand
+      ? `Товары ${state.brand}`
       : "Все товары";
   }
 
@@ -105,6 +113,9 @@ function initCatalogControls(state) {
       if (!link) return;
       e.preventDefault();
       state.category = link.dataset.category;
+      /* выбрали конкретную категорию — отбор по бренду больше не нужен,
+         иначе два фильтра пересекаются и выдача пустеет */
+      state.brand = "";
       updateCatalogURL(state);
       renderSidebar(state);
       renderCatalogGrid(state);
